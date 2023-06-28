@@ -65,9 +65,12 @@ def get_links_from_html(html):
     extracted_links = [link[1] for link in links]
     return extracted_links
 
-def find_all_links(start_url, degrees,linkLimit, linkList=[]):
-    if degrees < 1:
-        return
+def find_all_links(start_url, degrees):
+    global linkLimit
+    global linkList
+    
+    if degrees < 1 or len(linkList) > linkLimit:
+        return linkList
     
     domain = cut_off_url(start_url)
 
@@ -85,13 +88,16 @@ def find_all_links(start_url, degrees,linkLimit, linkList=[]):
         for link in links:
             linkList.append(link)
             if len(linkList) % 100 == 0:
-                print(len(linkList))
+                print(str(len(linkList))+" links found.")
+
+            if len(linkList) > linkLimit:
+                return linkList
 
         # Recursively find links in each extracted link
-        if len(linkList) < linkLimit:
-            print(len(linkList)+" < "+linkLimit)
-            for link in links:
-                find_all_links(link, degrees - 1, linkLimit, linkList)
+        for link in links:
+            find_all_links(link, degrees - 1)
+        else:
+            return linkList
     except Exception:
         print("An exception occured.")
 
@@ -106,7 +112,7 @@ def remove_duplicates(lst):
 
 linkList = [starterLink]
 
-linkList = find_all_links(starterLink, degrees, linkLimit, linkList)
+find_all_links(starterLink, degrees)
 
 # removing duplicates
 linkList = remove_duplicates(linkList)
