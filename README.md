@@ -1,2 +1,2 @@
 # Archive-Website
-Archive n degrees of website with Internet Archive.
+Archive n degrees of a website with Internet Archive.
