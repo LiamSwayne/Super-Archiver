@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 # SETTINGS
 starterLink = '' # initial link to search
 degrees = 3 # number of levels of outlinks to archive. ex: 2 means outlinks of outlinks
-linkLimit = 3000 # max number of links
+linkLimit = 1000 # max number of links
 
 def getURL(linkStr,ipaddressClassA=109,shutdown=False):
     import requests, sys, bs4, re
