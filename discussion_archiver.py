@@ -117,11 +117,13 @@ find_all_links(lastComment, degrees)
 # removing duplicates
 linkList = remove_duplicates(linkList)
 successful = 0
+
+#archiving the links
 for i in range(len(linkList)):
     try:
         getURL('https://web.archive.org/save/'+linkList[i])
         successful += 1
-        print(linkList[i])
+        print(linkList[i]) # print successfully archived links
     except Exception:
         pass
 
