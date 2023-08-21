@@ -117,14 +117,20 @@ find_all_links(lastComment, degrees)
 # removing duplicates
 linkList = remove_duplicates(linkList)
 successful = 0
+successfulLinks = []
 for i in range(len(linkList)):
     try:
         getURL('https://web.archive.org/save/'+linkList[i])
         successful += 1
+        successfulLinks.append(linkList[i])
     except Exception:
         pass
 # print final number of links archived
+if i == 0:
+    print("No links were archived.")
 if i == 1:
-    print("1 link archived.")
+    print("1 link archived: "+successfulLinks[0])
 else:
+    for i in range(len(successfulLinks)):
+        print(successfulLinks[i])
     print(str(successful)+" links archived.")
