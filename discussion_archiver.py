@@ -2,12 +2,13 @@
 
 import re
 from urllib.parse import urlparse
+import sys
 
 # SETTINGS
 degrees = 3 # number of levels of outlinks to archive. ex: 2 means outlinks of outlinks
 linkLimit = 1000 # max number of links
 
-def getURL(linkStr,ipaddressClassA=109):
+def getURL(linkStr,ipaddressClassA=109,shutdown=False):
     import requests, bs4
     
     successful = False
@@ -24,8 +25,10 @@ def getURL(linkStr,ipaddressClassA=109):
     rerouteCount = 0
     while not successful:
         if rerouteCount >= 10:
-            break
-        
+            if shutdown:
+                sys.exit()
+            else:
+                break
         try:
             response = requests.get(linkStr, headers=headers)
             successful = True
@@ -118,17 +121,10 @@ find_all_links(lastComment, degrees)
 linkList = remove_duplicates(linkList)
 successful = 0
 for i in range(len(linkList)):
-    if linkList[i][:4] != "http":
-        try:
-            getURL('https://web.archive.org/save/'+linkList[i])
-            successful += 1
-            print(linkList[i])
-        except Exception:
-            pass
-# print final number of links archived
-if successful == 0:
-    print("No links were archived.")
-elif successful == 1:
-    print("1 link archived.")
-else:
-    print(str(successful)+" links archived.")
+    try:
+        getURL('https://web.archive.org/save/'+linkList[i])
+        successful += 1
+    except Exception:
+        pass
+
+print(str(successful)+" links archived.")
