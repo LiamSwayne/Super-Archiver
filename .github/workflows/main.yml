@@ -1,0 +1,17 @@
+name: auto-archive
+
+on:
+  discussion_comment:
+    types: [created, edited]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Execute python script
+        run: python discussion_archiver.py
