@@ -121,6 +121,7 @@ for i in range(len(linkList)):
     try:
         getURL('https://web.archive.org/save/'+linkList[i])
         successful += 1
+        print(linkList[i])
     except Exception:
         pass
 
