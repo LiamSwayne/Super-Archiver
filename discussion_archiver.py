@@ -2,13 +2,12 @@
 
 import re
 from urllib.parse import urlparse
-import sys
 
 # SETTINGS
 degrees = 3 # number of levels of outlinks to archive. ex: 2 means outlinks of outlinks
 linkLimit = 1000 # max number of links
 
-def getURL(linkStr,ipaddressClassA=109,shutdown=False):
+def getURL(linkStr,ipaddressClassA=109):
     import requests, bs4
     
     successful = False
@@ -25,10 +24,8 @@ def getURL(linkStr,ipaddressClassA=109,shutdown=False):
     rerouteCount = 0
     while not successful:
         if rerouteCount >= 10:
-            if shutdown:
-                sys.exit()
-            else:
-                break
+            break
+        
         try:
             response = requests.get(linkStr, headers=headers)
             successful = True
