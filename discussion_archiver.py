@@ -120,6 +120,7 @@ successful = 0
 for i in range(len(linkList)):
     print(linkList)
     if linkList[i][:4] != "http":
+        print(1000)
         try:
             getURL('https://web.archive.org/save/'+linkList[i])
             successful += 1
