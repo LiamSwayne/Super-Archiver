@@ -89,7 +89,7 @@ def find_all_links(start_url, degrees):
         else:
             return linkList
     except Exception as e:
-        print("An exception occured: "+e)
+        print("An exception occured: "+str(e))
 
     return linkList
 
