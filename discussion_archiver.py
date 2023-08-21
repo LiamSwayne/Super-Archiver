@@ -2,14 +2,14 @@
 
 import re
 from urllib.parse import urlparse
+import requests
+import bs4
 
 # SETTINGS
 degrees = 3 # number of levels of outlinks to archive. ex: 2 means outlinks of outlinks
 linkLimit = 1000 # max number of links
 
-def getURL(linkStr,ipaddressClassA=109,shutdown=False):
-    import requests, bs4
-    
+def getURL(linkStr,ipaddressClassA=109,shutdown=False):    
     successful = False
     headers = {
             'User-Agent': ''
