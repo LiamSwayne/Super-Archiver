@@ -79,8 +79,6 @@ def find_all_links(start_url, degrees):
         # Print the extracted links
         for link in links:
             linkList.append(link)
-            if len(linkList) % 100 == 0:
-                print(str(len(linkList))+" links found.")
 
             if len(linkList) > linkLimit:
                 return linkList
@@ -120,11 +118,12 @@ successful = 0
 
 #archiving the links
 for i in range(len(linkList)):
-    try:
-        getURL('https://web.archive.org/save/'+linkList[i])
-        successful += 1
-        print(linkList[i]) # print successfully archived links
-    except Exception:
-        pass
+    if linkList[i][:4] != "http":
+        try:
+            getURL('https://web.archive.org/save/'+linkList[i])
+            successful += 1
+            print(linkList[i]) # print successfully archived links
+        except Exception:
+            pass
 
 print(str(successful)+" links archived.")
