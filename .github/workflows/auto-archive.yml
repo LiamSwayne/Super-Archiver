@@ -2,7 +2,7 @@ name: auto-archive
 
 on:
   discussion_comment:
-    types: [created, edited]
+    types: [created]
 
 jobs:
   build:
