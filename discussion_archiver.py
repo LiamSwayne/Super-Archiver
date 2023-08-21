@@ -122,3 +122,5 @@ linkList = remove_duplicates(linkList)
 
 for i in range(len(linkList)):
     getURL('https://web.archive.org/save/'+linkList[i])
+    if i % 100 == 0 and i > 0:
+        print(str(i)+" links archived.")
