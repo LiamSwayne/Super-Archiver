@@ -3,6 +3,6 @@ Post a URL comment in the [discussion](https://github.com/LiamSwayne/Website-Arc
 
 _OR_
 
-Download to archive n levels of outlinks of a website with Internet Archive.
+Download archiver.py to archive n levels of outlinks of a website with Internet Archive.
 
 Note: The archiver is not restricted to the given domain.
