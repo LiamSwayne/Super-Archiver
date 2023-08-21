@@ -118,9 +118,7 @@ successful = 0
 
 #archiving the links
 for i in range(len(linkList)):
-    print(linkList)
-    if linkList[i][:4] != "http":
-        print(1000)
+    if linkList[i][:4] == "http":
         try:
             getURL('https://web.archive.org/save/'+linkList[i])
             successful += 1
