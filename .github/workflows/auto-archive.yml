@@ -11,16 +11,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install requests
-          python -m pip install beautifulsoup4
-        
-      - name: Setup python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
+      - name: Create virtual environment
+        run: python -m venv venv
 
+      - name: Activate virtual environment and install dependencies
+        run: |
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install requests beautifulsoup4
+        
       - name: Execute python script
-        run: /opt/hostedtoolcache/Python/3.11.4/x64/bin/python discussion_archiver.py
+        run: |
+          source venv/bin/activate
+          python discussion_archiver.py
