@@ -126,4 +126,10 @@ for i in range(len(linkList)):
         except Exception:
             pass
 
-print(str(successful)+" links archived.")
+# print number of links archived
+if successful == 0:
+    print("No links were archived.")
+elif successful == 1:
+    print("1 link archived.")
+else:
+    print(str(successful)+" links archived.")
