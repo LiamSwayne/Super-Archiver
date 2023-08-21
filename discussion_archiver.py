@@ -25,9 +25,7 @@ def getURL(linkStr,ipaddressClassA=109,shutdown=False):
     rerouteCount = 0
     while not successful:
         if rerouteCount >= 10:
-            print("Reroute limit reached while getting: "+linkStr)
             if shutdown:
-                print("Shutting down.")
                 sys.exit()
             else:
                 break
@@ -41,7 +39,6 @@ def getURL(linkStr,ipaddressClassA=109,shutdown=False):
             else:
                 ipaddressClassA = 1
             headers.update({'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/'+str(ipaddressClassA)+'.0.0.0 Safari/537.36'})
-            print("Connection error encountered. Rerouting...")
             rerouteCount +=1
         if successful:
             text = str(bs4.BeautifulSoup(response.content, 'html.parser'))
