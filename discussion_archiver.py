@@ -79,8 +79,6 @@ def find_all_links(start_url, degrees):
         # Print the extracted links
         for link in links:
             linkList.append(link)
-            if len(linkList) % 100 == 0:
-                print(str(len(linkList))+" links found.")
 
             if len(linkList) > linkLimit:
                 return linkList
