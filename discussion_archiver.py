@@ -79,6 +79,8 @@ def find_all_links(start_url, degrees):
         # Print the extracted links
         for link in links:
             linkList.append(link)
+            if len(linkList) % 100 == 0:
+                print(str(len(linkList))+" links found.")
 
             if len(linkList) > linkLimit:
                 return linkList
@@ -88,8 +90,8 @@ def find_all_links(start_url, degrees):
             find_all_links(link, degrees - 1)
         else:
             return linkList
-    except Exception as e:
-        print("An exception occured: "+str(e))
+    except Exception:
+        print("An exception occured.")
 
     return linkList
 
