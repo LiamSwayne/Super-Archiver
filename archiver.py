@@ -50,8 +50,6 @@ def getURL(linkStr,ipaddressClassA=109,shutdown=False):
                     successful = False
     return text
 
-from urllib.parse import urlparse
-
 def cut_off_url(link):
     parsed_link = urlparse(link)
     cut_off_link = parsed_link.scheme + "://" + parsed_link.netloc
