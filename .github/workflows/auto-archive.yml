@@ -23,4 +23,4 @@ jobs:
       - name: Execute python script
         run: |
           source venv/bin/activate
-          python discussion_archiver.py
+          pypy discussion_archiver.py
