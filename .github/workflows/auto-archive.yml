@@ -9,10 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Create virtual environment
-        run: python -m venv venv
+      - uses: actions/checkout@v3
 
       - name: Activate virtual environment and install dependencies
         run: |
@@ -21,6 +18,7 @@ jobs:
           pip install requests beautifulsoup4
         
       - name: Execute python script
-        run: |
-          source venv/bin/activate
-          pypy discussion_archiver.py
+      - uses: actions/setup-python@v4 
+        with:
+          python-version: 'pypy3.9' 
+      - run: python discussion_archiver.py
