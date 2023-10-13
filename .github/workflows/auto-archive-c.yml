@@ -1,0 +1,20 @@
+name: auto-archive
+
+on:
+  discussion_comment:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build C program
+        run: |
+          gcc -o archiver archiver.c
+          
+      - name: Execute C program
+        run: |
+          ./archiver
