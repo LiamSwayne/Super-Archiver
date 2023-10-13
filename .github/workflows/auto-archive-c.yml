@@ -13,17 +13,14 @@ jobs:
 
       - name: Update APT
         run: sudo apt-get update
-      
-      - name: Install libcurl development package
-        run: sudo apt-get install libcurl4-openssl-dev
 
-      - name: Install libxml2 development package
-        run: sudo apt-get install libxml2-dev
+      - name: Install libcurl and libxml2 development packages
+        run: sudo apt-get install libcurl4-openssl-dev libxml2-dev
 
       - name: Build C program
         run: |
-          gcc -o archiver archiver.c
-          
+          gcc -o archiver archiver.c -lcurl -lxml2
+
       - name: Execute C program
         run: |
           ./archiver
