@@ -11,9 +11,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Update APT
-        run: sudo apt-get update
-
       - name: Install libcurl and libxml2 development packages
         run: sudo apt-get install libcurl4-openssl-dev libxml2-dev
 
