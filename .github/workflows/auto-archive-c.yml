@@ -19,7 +19,7 @@ jobs:
 
       - name: Build C program
         run: |
-          gcc -o archiver archiver.c -lcurl -lxml2
+          gcc -o archiver archiver.c -lcurl -lxml2 -lhtml2
 
       - name: Execute C program
         run: |
