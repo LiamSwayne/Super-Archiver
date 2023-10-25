@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GitHub Workflow Dispatch</title>
+</head>
+<body>
+    <button id="dispatchButton">Dispatch Workflow</button>
+    <p id="responseMessage"></p>
+
+    <script>
+        const token = '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';
+        const owner = 'LiamSwayne';
+        const repo = 'Website-Archiver';
+        const workflow_name = 'test.yml';
+        const ref = 'main';
+
+        document.getElementById('dispatchButton').addEventListener('click', () => {
+            dispatchWorkflow();
+        });
+
+        function dispatchWorkflow() {
+            const current_time = new Date().toISOString();
+            const inputs = { "current_time": current_time };
+            const url = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflow_name}/dispatches`;
+            const headers = { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' };
+            const payload = { "ref": ref, "inputs": inputs };
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (response.status === 204) {
+                    document.getElementById('responseMessage').textContent = 'Workflow dispatch request sent successfully.';
+                } else {
+                    document.getElementById('responseMessage').textContent = 'Error sending workflow dispatch request. Status Code: ' + response.status;
+                }
+            })
+            .catch(error => {
+                document.getElementById('responseMessage').textContent = 'Error sending workflow dispatch request: ' + error;
+            });
+        }
+    </script>
+</body>
+</html>
