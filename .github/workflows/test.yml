@@ -1,49 +1,27 @@
-name: Run python script
+name: Assign Current Time to File
 
-on: # run on commits to the main branch
-  push:
-    branches:
-      - main
-  workflow_dispatch: # run when triggered manually
+on:
+  workflow_dispatch:
+    inputs:
+      current_time:
+        description: 'Current Time'
+        required: true
 
 jobs:
-  build:
+  assign_time:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repo content
-        uses: actions/checkout@v4 # checkout the repository content
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Setup python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11' # install the python version needed
+    - name: Create Latest Data File
+      run: echo ${{ github.event.inputs.current_time }} > latest_data.txt
 
-      - name: Configure Git identity
-        run: |
-          git config --global user.email "liamtswayne@gmail.com"
-          git config --global user.name "LiamSwayne"
-
-      - name: Execute python script
-        run: python build_template_from_source.py
-    
-      - name: Check for changes
-        id: git-check
-        run: |
-          git diff --exit-code || echo "Changes found"
-      
-      - name: Stage files
-        if: steps.git-check.outputs.return-code == '0'
-        run: git add .
-
-      - name: Commit changed files
-        if: steps.git-check.outputs.return-code == '0'
-        run: |
-          git commit -m "🤖 run python script" || echo "No changes to commit"
-
-      - name: Fetch from main
-        if: steps.git-check.outputs.return-code == '0'
-        run: git fetch origin main
-      
-      - name: Push code to main
-        if: steps.git-check.outputs.return-code == '0'
-        run: git push origin HEAD:main
+    - name: Commit and Push Latest Data
+      run: |
+        git config user.email "github-actions@github.com"
+        git config user.name "GitHub Actions"
+        git add latest_data.txt
+        git commit -m "Assign latest data"
+        git push
