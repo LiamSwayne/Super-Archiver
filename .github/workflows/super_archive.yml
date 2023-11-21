@@ -28,12 +28,11 @@ jobs:
 
       - name: Archive to archive.org
         run: |
-          # Add your command to archive the page to archive.org
           curl -X POST -d "url=${{ inputs.url }}" https://web.archive.org/save/${{ inputs.url }}
 
       - name: Download with wget
         run: |
-          wget --mirror --page-requisites --convert-links --no-parent -P /tmp/archive ${{ inputs.url }}
+          wget --mirror --page-requisites --convert-links --no-parent --quota=1G --no-clobber --random-wait -P /tmp/archive ${{ inputs.url }}
 
       - name: Upload to archive.org (First Identifier)
         run: |
