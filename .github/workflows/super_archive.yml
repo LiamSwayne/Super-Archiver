@@ -1,0 +1,48 @@
+name: Super Archive Web Page
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'URL to archive'
+        required: true
+      identifier1:
+        description: 'Identifier for the first upload'
+        required: true
+      identifier2:
+        description: 'Identifier for the second upload'
+        required: true
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Internet Archive Tool
+        run: |
+          curl -LOs https://archive.org/download/ia-pex/ia
+          chmod +x ia
+
+      - name: Archive to archive.org
+        run: |
+          # Add your command to archive the page to archive.org
+          # Example: curl -X POST -d "url=${{ inputs.url }}" https://web.archive.org/save/${{ inputs.url }}
+
+      - name: Download with wget
+        run: |
+          wget --mirror --page-requisites --convert-links --no-parent -P /tmp/archive ${INPUT_URL}
+
+      - name: Upload to archive.org (First Identifier)
+        run: |
+          ./ia upload ${{ inputs.identifier1 }} /tmp/archive/*
+
+      - name: Download second URL with wget
+        run: |
+          wget --mirror --page-requisites --convert-links --no-parent -P /tmp/second_archive https://web.archive.org/web/2/${{ inputs.url }}
+
+      - name: Upload second archive to archive.org (Second Identifier)
+        run: |
+          ./ia upload ${{ inputs.identifier2 }} /tmp/second_archive/*
