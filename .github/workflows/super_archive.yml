@@ -33,7 +33,7 @@ jobs:
 
       - name: Download with wget
         run: |
-          wget --mirror --page-requisites --convert-links --no-parent -P /tmp/archive ${INPUT_URL}
+          wget --mirror --page-requisites --convert-links --no-parent -P /tmp/archive ${{ inputs.url }}
 
       - name: Upload to archive.org (First Identifier)
         run: |
