@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Archive Page</title>
+    <title>Super Archive</title>
     <style>
         body {
             display: flex;
@@ -27,7 +27,7 @@
             font-weight: 900;
         }
 
-        label, input, button {
+        label, input, textarea, button {
             margin: 5px;
         }
 
@@ -38,24 +38,30 @@
     </style>
 </head>
 <body>
-    <div>For pages that need to be archived with backups in case of catastrophe.</div>
-    <label for="urlInput">Enter URL:</label>
-    <input type="text" id="urlInput" style="min-width: 300px;">
-    <button id="generateHashcodesButton">Generate backups</button>
+    <div>Archive numerous pages to archive.org at once.</div>
+    <label for="urlInput">Paste URLs (separated by newlines):</label>
+    <textarea id="urlInput" style="min-width: 300px;"></textarea>
+    <button id="archiveUrlsButton">Archive URLs</button>
     <div id="responseMessage"></div>
+    
+    <div>Triple archive a page in case of catastrophe.</div>
+    <label for="urlInput2">Enter URL:</label>
+    <input type="text" id="urlInput2" style="min-width: 300px;">
+    <button id="generateBackupsButton">Generate backups</button>
+    <div id="responseMessage2"></div>
 
     <div id="footer">Your use of this tool <span style="font-weight: 900;">must</span> comply with the Internet Archive's <a href="https://archive.org/about/terms.php">Terms of Use</a>. Improve this page on <a href="https://github.com/LiamSwayne/Super-Archiver">GitHub</a>.</div>
 
-    <script>
-        document.getElementById('generateHashcodesButton').addEventListener('click', () => {
+    <script type="module">
+        document.getElementById('generateBackupsButton').addEventListener('click', () => {
             generateHashcodes();
         });
 
         function generateHashcodes() {
-            let urlInput = document.getElementById('urlInput').value;
+            let urlInput2 = document.getElementById('urlInput2').value;
             let current_time = new Date().toISOString();
-            let combinedString1 = current_time + urlInput + '1';
-            let combinedString2 = current_time + urlInput + '2';
+            let combinedString1 = current_time + urlInput2 + '1';
+            let combinedString2 = current_time + urlInput2 + '2';
 
             // Generate hashcodes
             let hashcode1 = hashCode(combinedString1);
@@ -66,16 +72,16 @@
             let identifier2 = hashcode2.toString();
 
             // Display the response message
-            let responseMessage = document.getElementById('responseMessage');
-            responseMessage.innerHTML = `<div>Request sent!</div><div>Isolated backups will be archived at these links within the next few minutes:</div>`;
-            responseMessage.innerHTML += `<a href="https://web.archive.org/web/2/${urlInput}" target="_blank">https://web.archive.org/web/2/${urlInput}</a>`;
-            responseMessage.innerHTML += `<br>`;
-            responseMessage.innerHTML += `<a href="https://archive.org/details/${identifier1}" target="_blank">https://archive.org/details/${identifier1}</a>`;
-            responseMessage.innerHTML += `<br>`;
-            responseMessage.innerHTML += `<a href="https://archive.org/details/${identifier2}" target="_blank">https://archive.org/details/${identifier2}</a>`;
+            let responseMessage2 = document.getElementById('responseMessage2');
+            responseMessage2.innerHTML = `<div>Request sent!</div><div>Isolated backups will be archived at these links within the next few minutes:</div>`;
+            responseMessage2.innerHTML += `<a href="https://web.archive.org/web/2/${urlInput2}" target="_blank">https://web.archive.org/web/2/${urlInput2}</a>`;
+            responseMessage2.innerHTML += `<br>`;
+            responseMessage2.innerHTML += `<a href="https://archive.org/details/${identifier1}" target="_blank">https://archive.org/details/${identifier1}</a>`;
+            responseMessage2.innerHTML += `<br>`;
+            responseMessage2.innerHTML += `<a href="https://archive.org/details/${identifier2}" target="_blank">https://archive.org/details/${identifier2}</a>`;
 
             // Send hashcodes to GitHub Actions workflow
-            dispatchWorkflow(identifier1, identifier2, urlInput);
+            dispatchWorkflow(identifier1, identifier2, urlInput2);
         }
 
         // Simple hashcode generator
@@ -88,7 +94,7 @@
             return Math.abs(hash);
         }
 
-        function dispatchWorkflow(identifier1, identifier2, urlInput) {
+        function dispatchWorkflow(identifier1, identifier2, urlInput2) {
             let token = 'github_pat_11AZ4YYKQ0Wgs8W8cVUhy8_YPo0rsn3HHL' + 'X7RUfC43ox2mKkj9U9AVoZzaaKqr63uHOXRDNN4BusghVsTc';
             let owner = 'LiamSwayne';
             let repo = 'Website-Archiver';
@@ -97,7 +103,7 @@
 
             let url = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflow_name}/dispatches`;
             let headers = { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' };
-            let payload = { "ref": branch, "inputs": { "identifier1": identifier1, "identifier2": identifier2, "url": urlInput } };
+            let payload = { "ref": branch, "inputs": { "identifier1": identifier1, "identifier2": identifier2, "url": urlInput2 } };
 
             fetch(url, {
                 method: 'POST',
@@ -105,15 +111,58 @@
                 body: JSON.stringify(payload)
             })
             .then(response => {
-                let responseMessage = document.getElementById('responseMessage');
+                let responseMessage2 = document.getElementById('responseMessage2');
                 if (response.status !== 204) {
-                    responseMessage.innerHTML = 'Error sending workflow dispatch request. Status Code: ' + response.status;
+                    responseMessage2.innerHTML = 'Error sending workflow dispatch request. Status Code: ' + response.status;
                 }
             })
             .catch(error => {
-                let responseMessage = document.getElementById('responseMessage');
-                responseMessage.innerHTML = 'Error sending workflow dispatch request: ' + error;
+                let responseMessage2 = document.getElementById('responseMessage2');
+                responseMessage2.innerHTML = 'Error sending workflow dispatch request: ' + error;
             });
+        }
+    </script>
+    <script type="module">
+        document.getElementById('archiveUrlsButton').addEventListener('click', () => {
+            archiveUrls();
+        });
+
+        function archiveUrls() {
+            let urlInput = document.getElementById('urlInput').value;
+            let urls = urlInput.split('\n');
+
+            // Display the response message
+            let responseMessage = document.getElementById('responseMessage');
+            responseMessage.innerHTML = `<div>Archive triggered for all URLs</div>`;
+
+            // Trigger the workflow for all URLs
+            dispatchWorkflow(urls);
+        }
+
+        function dispatchWorkflow(urls) {
+            let token = 'github_pat_11AZ4YYKQ0Wgs8W8cVUhy8_YPo0rsn3HHL' + 'X7RUfC43ox2mKkj9U9AVoZzaaKqr63uHOXRDNN4BusghVsTc';
+            let owner = 'LiamSwayne';
+            let repo = 'Website-Archiver';
+            let workflow_name = 'mass_archive.yml';
+            let branch = 'main';
+
+            let url = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflow_name}/dispatches`;
+            let headers = { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' };
+            let payload = { "ref": branch, "inputs": { "urls": urls.join('\n') } };
+
+            fetch(url, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(payload)
+                })
+                .then(response => {
+                    if (response.status !== 204) {
+                        console.error('Error sending workflow dispatch request. Status Code: ' + response.status);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error sending workflow dispatch request: ' + error);
+                });
         }
     </script>
 </body>
