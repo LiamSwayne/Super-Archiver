@@ -22,5 +22,5 @@ jobs:
           # Use the URL in your archiving process (replace the following line with your archiving command)
           echo "$url \n"
           # Replace the following line with your archiving command
-          curl -sS "https://web.archive.org/save/$url" /dev/null
+          curl -sS "https://web.archive.org/save/$url" > /dev/null
         done
