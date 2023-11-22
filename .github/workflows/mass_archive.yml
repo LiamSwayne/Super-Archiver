@@ -3,7 +3,7 @@ name: Mass Archive
 on:
   workflow_dispatch:
     inputs:
-      url: 
+      url:
         description: 'List of URLs (separated by newlines)'
         required: true
 
@@ -17,7 +17,7 @@ jobs:
 
     - name: Archive URLs
       run: |
-        urls=(${{ github.event.inputs.url | tr '\n' ' ' }})
+        IFS=$'\n' read -ra urls <<< "${{ github.event.inputs.url }}"
         for url in "${urls[@]}"; do
           # Use the URL in your archiving process (replace the following line with your archiving command)
           echo "Archiving $url"
