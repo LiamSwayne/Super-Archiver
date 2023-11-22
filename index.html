@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Archive Page</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #333;
+            color: #fff;
+            font-size: 20px;
+            font-family: 'Courier New', Courier;
+        }
+
+        div {
+            text-align: center;
+            margin: 10px;
+        }
+
+        label, input, button {
+            margin: 5px;
+        }
+
+        #footer {
+            position: fixed;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div>For pages that need to be archived with backups in case of catastrophe.</div>
+    <label for="urlInput">Enter URL:</label>
+    <input type="text" id="urlInput" style="min-width: 300px;">
+    <button id="generateHashcodesButton">Generate backups</button>
+    <div id="responseMessage"></div>
+
+    <div id="footer">Your use of this tool <span style="font-weight: 900;">must</span> comply with the Internet Archive's <a href="https://archive.org/about/terms.php" style="color:white;font-weight: 900;">Terms of Use</a>.</div>
+
+    <script>
+        document.getElementById('generateHashcodesButton').addEventListener('click', () => {
+            generateHashcodes();
+        });
+
+        function generateHashcodes() {
+            let urlInput = document.getElementById('urlInput').value;
+            let current_time = new Date().toISOString();
+            let combinedString1 = current_time + urlInput + '1';
+            let combinedString2 = current_time + urlInput + '2';
+
+            // Generate hashcodes
+            let hashcode1 = hashCode(combinedString1);
+            let hashcode2 = hashCode(combinedString2);
+
+            // Use hashcodes as inputs for identifier1 and identifier2
+            let identifier1 = hashcode1.toString();
+            let identifier2 = hashcode2.toString();
+
+            // Display the response message
+            let responseMessage = document.getElementById('responseMessage');
+            responseMessage.innerHTML = `<div>Request sent!</div><div>Isolated backups will be archived at these links within the next few minutes:</div>`;
+            responseMessage.innerHTML += `<a href="https://web.archive.org/web/2/${urlInput}" target="_blank">https://web.archive.org/web/2/${urlInput}</a>`;
+            responseMessage.innerHTML += `<br>`;
+            responseMessage.innerHTML += `<a href="https://archive.org/details/${identifier1}" target="_blank">https://archive.org/details/${identifier1}</a>`;
+            responseMessage.innerHTML += `<br>`;
+            responseMessage.innerHTML += `<a href="https://archive.org/${identifier2}" target="_blank">https://archive.org/${identifier2}</a>`;
+
+            // Send hashcodes to GitHub Actions workflow
+            dispatchWorkflow(identifier1, identifier2, urlInput);
+        }
+
+        // Simple hashcode generator
+        function hashCode(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                let char = str.charCodeAt(i);
+                hash = (hash << 5) - hash + char;
+            }
+            return hash;
+        }
+
+        function dispatchWorkflow(identifier1, identifier2, urlInput) {
+            let token = 'github_pat_11AZ4YYKQ0Wgs8W8cVUhy8_YPo0rsn3HHL' + 'X7RUfC43ox2mKkj9U9AVoZzaaKqr63uHOXRDNN4BusghVsTc';
+            let owner = 'LiamSwayne';
+            let repo = 'Website-Archiver';
+            let workflow_name = 'super_archive.yml';
+            let branch = 'main';
+
+            let url = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflow_name}/dispatches`;
+            let headers = { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' };
+            let payload = { "ref": branch, "inputs": { "identifier1": identifier1, "identifier2": identifier2, "url": urlInput } };
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                let responseMessage = document.getElementById('responseMessage');
+                if (response.status !== 204) {
+                    responseMessage.innerHTML = 'Error sending workflow dispatch request. Status Code: ' + response.status;
+                }
+            })
+            .catch(error => {
+                let responseMessage = document.getElementById('responseMessage');
+                responseMessage.innerHTML = 'Error sending workflow dispatch request: ' + error;
+            });
+        }
+    </script>
+</body>
+</html>
