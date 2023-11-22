@@ -26,6 +26,13 @@ jobs:
           curl -LOs https://archive.org/download/ia-pex/ia
           chmod +x ia
 
+      - name: Configure Internet Archive Tool
+        run: |
+          ia configure
+          website-archiver-tool@outlook.com
+          $ {{ secrets.ARCHIVER_ACCOUNT_PASSWORD }}
+          
+
       - name: Archive to archive.org
         run: |
           curl -X POST -d "url=${{ inputs.url }}" https://web.archive.org/save/${{ inputs.url }}
