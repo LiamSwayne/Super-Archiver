@@ -85,7 +85,7 @@
                 let char = str.charCodeAt(i);
                 hash = (hash << 5) - hash + char;
             }
-            return hash;
+            return Math.abs(hash);
         }
 
         function dispatchWorkflow(identifier1, identifier2, urlInput) {
