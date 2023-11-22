@@ -49,4 +49,4 @@ jobs:
 
       - name: Upload second archive to archive.org (Second Identifier)
         run: |
-          ./ia upload ${{ inputs.identifier2 }} /tmp/second_archive/*
+          ia upload ${{ inputs.identifier2 }} /tmp/second_archive/*
