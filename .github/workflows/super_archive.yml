@@ -37,7 +37,7 @@ jobs:
 
       - name: Download with wget
         run: |
-          wget --mirror --page-requisites --convert-links --no-parent --quota=1G --no-clobber --random-wait -P /tmp/archive ${{ inputs.url }}
+          wget --mirror --page-requisites --convert-links --no-parent --quota=1G --quota-type=soft --no-clobber --random-wait -P /tmp/archive ${{ inputs.url }}
 
       - name: Upload to archive.org (First Identifier)
         run: |
@@ -45,7 +45,7 @@ jobs:
 
       - name: Download second URL with wget
         run: |
-          wget --mirror --page-requisites --convert-links --no-parent -P /tmp/second_archive https://web.archive.org/web/2/${{ inputs.url }}
+          wget --mirror --page-requisites --convert-links --no-parent --quota=1G --quota-type=soft --no-clobber --random-wait -P /tmp/archive ${{ inputs.url }}
 
       - name: Upload second archive to archive.org (Second Identifier)
         run: |
