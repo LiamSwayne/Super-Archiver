@@ -1,0 +1,26 @@
+name: Mass Archive
+
+on:
+  workflow_dispatch:
+    inputs:
+      url: 
+        description: 'List of URLs (separated by newlines)'
+        required: true
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+
+    - name: Archive URLs
+      run: |
+        urls=(${{ github.event.inputs.url | tr '\n' ' ' }})
+        for url in "${urls[@]}"; do
+          # Use the URL in your archiving process (replace the following line with your archiving command)
+          echo "Archiving $url"
+          # Replace the following line with your archiving command
+          curl -sS "https://web.archive.org/save/$url"
+        done
