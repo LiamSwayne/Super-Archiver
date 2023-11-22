@@ -39,6 +39,13 @@ jobs:
         run: |
           wget --mirror --page-requisites --convert-links --no-parent --quota=1G --no-clobber --random-wait -P /tmp/archive ${{ inputs.url }} || true
 
+      - name: Log number of files and total size
+        run: |
+          files_count=$(find /tmp/archive -type f | wc -l)
+          folder_size=$(du -sh /tmp/archive | cut -f1)
+          echo "Number of files in /tmp/archive: $files_count"
+          echo "Total size of /tmp/archive: $folder_size"
+
       - name: Upload to archive.org (First Identifier)
         run: |
           ia upload ${{ inputs.identifier1 }} /tmp/archive/*
@@ -46,6 +53,13 @@ jobs:
       - name: Download second URL with wget
         run: |
           wget --mirror --page-requisites --convert-links --no-parent --quota=1G --no-clobber --random-wait -P /tmp/archive ${{ inputs.url }} || true
+
+      - name: Log number of files and total size (second archive)
+        run: |
+          files_count=$(find /tmp/second_archive -type f | wc -l)
+          folder_size=$(du -sh /tmp/second_archive | cut -f1)
+          echo "Number of files in /tmp/second_archive: $files_count"
+          echo "Total size of /tmp/second_archive: $folder_size"
 
       - name: Upload second archive to archive.org (Second Identifier)
         run: |
