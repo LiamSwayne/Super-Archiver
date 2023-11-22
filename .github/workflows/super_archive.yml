@@ -31,7 +31,6 @@ jobs:
           ia configure
           website-archiver-tool@outlook.com
           $ {{ secrets.ARCHIVER_ACCOUNT_PASSWORD }}
-          
 
       - name: Archive to archive.org
         run: |
