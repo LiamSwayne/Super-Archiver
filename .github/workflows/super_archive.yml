@@ -29,8 +29,8 @@ jobs:
 
       - name: Configure Internet Archive Tool
         run: |
-          ia configure --email="website-archiver-tool@outlook.com"
-          ia configure --password="${{ secrets.ARCHIVER_ACCOUNT_PASSWORD }}"
+          ./ia configure --email="website-archiver-tool@outlook.com"
+          ./ia configure --password="${{ secrets.ARCHIVER_ACCOUNT_PASSWORD }}"
 
       - name: Archive to archive.org
         run: |
@@ -50,4 +50,4 @@ jobs:
 
       - name: Upload second archive to archive.org (Second Identifier)
         run: |
-          ia upload ${{ inputs.identifier2 }} /tmp/second_archive/*
+          ./ia upload ${{ inputs.identifier2 }} /tmp/second_archive/*
