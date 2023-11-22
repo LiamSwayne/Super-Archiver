@@ -29,9 +29,9 @@ jobs:
 
       - name: Configure Internet Archive Tool
         run: |
-          printf "website-archiver-tool@outlook.com\n" | ia configure --email
-          printf "%s\n" "${{ secrets.ARCHIVER_ACCOUNT_PASSWORD }}" | ia configure --password
-          
+          ia configure --email="website-archiver-tool@outlook.com"
+          ia configure --password="${{ secrets.ARCHIVER_ACCOUNT_PASSWORD }}"
+
       - name: Archive to archive.org
         run: |
           curl -X POST -d "url=${{ inputs.url }}" https://web.archive.org/save/${{ inputs.url }}
