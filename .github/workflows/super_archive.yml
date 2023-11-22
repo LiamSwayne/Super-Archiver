@@ -25,13 +25,13 @@ jobs:
         run: |
           curl -LOs https://archive.org/download/ia-pex/ia
           chmod +x ia
+          sudo mv ia /usr/local/bin
 
       - name: Configure Internet Archive Tool
         run: |
-          ia configure
-          website-archiver-tool@outlook.com
-          $ {{ secrets.ARCHIVER_ACCOUNT_PASSWORD }}
-
+          echo "website-archiver-tool@outlook.com" | ia configure --email
+          echo "${{ secrets.ARCHIVER_ACCOUNT_PASSWORD }}" | ia configure --password
+          
       - name: Archive to archive.org
         run: |
           curl -X POST -d "url=${{ inputs.url }}" https://web.archive.org/save/${{ inputs.url }}
@@ -42,7 +42,7 @@ jobs:
 
       - name: Upload to archive.org (First Identifier)
         run: |
-          ./ia upload ${{ inputs.identifier1 }} /tmp/archive/*
+          ia upload ${{ inputs.identifier1 }} /tmp/archive/*
 
       - name: Download second URL with wget
         run: |
@@ -50,4 +50,4 @@ jobs:
 
       - name: Upload second archive to archive.org (Second Identifier)
         run: |
-          ./ia upload ${{ inputs.identifier2 }} /tmp/second_archive/*
+          ia upload ${{ inputs.identifier2 }} /tmp/second_archive/*
