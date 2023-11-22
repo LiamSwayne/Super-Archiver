@@ -17,8 +17,8 @@ jobs:
 
     - name: Archive URLs
       run: |
-        echo "${{ github.event.inputs.urls }}"
-        IFS=$'\n' read -ra urls <<< "${{ github.event.inputs.urls }}"
+        IFS=$'\n' read -rd '' -a urls <<< "${{ github.event.inputs.urls }}"
+        echo IFS
         for url in "${urls[@]}"; do
           # Use the URL in your archiving process (replace the following line with your archiving command)
           echo "Archiving $url"
