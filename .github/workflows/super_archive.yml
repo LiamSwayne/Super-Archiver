@@ -34,7 +34,6 @@ jobs:
     - name: Archive to archive.org
       run: |
         url=${{ inputs.url }}
-        echo "========== URLs archived =========="
     
         echo "Archiving given page: $url"
     
