@@ -68,7 +68,7 @@ jobs:
           else
             echo "Skipping outlink with bad URL format: $outlink"
           fi
-        done
+        done || true  # Ignore errors in the outlink archiving process
 
     - name: Download with wget
       run: |
