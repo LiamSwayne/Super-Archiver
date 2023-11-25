@@ -41,8 +41,12 @@ jobs:
         max_retries=3
         retry_counter=0
         while [ $retry_counter -lt $max_retries ]; do
-          curl -sS "https://web.archive.org/save/$url" > /dev/null && break
-          ((retry_counter++))
+          if curl -sS "https://web.archive.org/save/$url" > /dev/null; then
+            break
+          else
+            ((retry_counter++))
+            echo "Failed to archive main page. Retrying..."
+          fi
         done
     
         # Retry loop for outlinks
