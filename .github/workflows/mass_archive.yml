@@ -15,19 +15,30 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v2
 
-    - name: Archive URLs
+    name: Archive URLs
       run: |
         archival_urls=(${{ github.event.inputs.urls }})
         echo "========== URLs archived =========="
         for url in "${archival_urls[@]}"; do
           echo "Archiving $url"
           
-          # Save the main content
-          curl -sS "https://web.archive.org/save/$url" > /dev/null
-          
-          # Save outlinks
+          # Retry loop for the main content
+          max_retries=3
+          retry_counter=0
+          while [ $retry_counter -lt $max_retries ]; do
+            curl -sS "https://web.archive.org/save/$url" > /dev/null && break
+            ((retry_counter++))
+          done
+
+          # Retry loop for outlinks
           curl -sS "$url" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
             echo "Archiving outlink: $outlink"
-            curl -sS "https://web.archive.org/save/$outlink" > /dev/null
+            
+            max_retries=3
+            retry_counter=0
+            while [ $retry_counter -lt $max_retries ]; do
+              curl -sS "https://web.archive.org/save/$outlink" > /dev/null && break
+              ((retry_counter++))
+            done
           done
         done
