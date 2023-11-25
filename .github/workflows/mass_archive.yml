@@ -20,7 +20,7 @@ jobs:
         archival_urls=(${{ github.event.inputs.urls }})
         echo "========== URLs archived =========="
         for url in "${archival_urls[@]}"; do
-          echo "Archiving $url"
+          echo "Archiving given page: $url"
           
           # Retry loop for the main content
           max_retries=3
