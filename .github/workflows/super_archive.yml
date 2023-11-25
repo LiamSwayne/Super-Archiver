@@ -18,72 +18,72 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+    - name: Checkout Repository
+      uses: actions/checkout@v2
 
-      - name: Install Internet Archive Tool
-        run: |
-          curl -LOs https://archive.org/download/ia-pex/ia
-          chmod +x ia
-          sudo mv ia /usr/local/bin
+    - name: Install Internet Archive Tool
+      run: |
+        curl -LOs https://archive.org/download/ia-pex/ia
+        chmod +x ia
+        sudo mv ia /usr/local/bin
 
-      - name: Configure Internet Archive Tool
-        run: |
-          ia configure --username="website-archiver-tool@outlook.com" --password="${{ secrets.ARCHIVER_ACCOUNT_PASSWORD }}"
+    - name: Configure Internet Archive Tool
+      run: |
+        ia configure --username="website-archiver-tool@outlook.com" --password="${{ secrets.ARCHIVER_ACCOUNT_PASSWORD }}"
 
-      - name: Archive to archive.org
-        run: |
-          url=${{ inputs.url }}
-          echo "Archiving $url"
+    - name: Archive to archive.org
+      run: |
+        url=${{ inputs.url }}
+        echo "Archiving $url"
 
-          # Save the main content
-          curl -sS "https://web.archive.org/save/$url" > /dev/null
-          
-          # Save outlinks
-          curl -sS "$url" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
-            echo "Archiving outlink: $outlink"
-            curl -sS "https://web.archive.org/save/$outlink" > /dev/null
-          done
+        # Save the main content
+        curl -sS "https://web.archive.org/save/$url" > /dev/null
+        
+        # Save outlinks
+        curl -sS "$url" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
+          echo "Archiving outlink: $outlink"
+          curl -sS "https://web.archive.org/save/$outlink" > /dev/null
+        done
 
-      - name: Download with wget
-        run: |
-          wget --mirror --page-requisites --convert-links --no-parent --quota=1G --no-clobber --random-wait -P /tmp/archive ${{ inputs.url }} || true
+    - name: Download with wget
+      run: |
+        wget --mirror --page-requisites --convert-links --no-parent --quota=1G --no-clobber --random-wait -P /tmp/archive ${{ inputs.url }} || true
 
-      - name: Log number of files and total size
-        run: |
-          files_count=$(find /tmp/archive -type f | wc -l)
-          folder_size=$(du -sh /tmp/archive | cut -f1)
-          echo "Number of files in /tmp/archive: $files_count"
-          echo "Total size of /tmp/archive: $folder_size"
+    - name: Log number of files and total size
+      run: |
+        files_count=$(find /tmp/archive -type f | wc -l)
+        folder_size=$(du -sh /tmp/archive | cut -f1)
+        echo "Number of files in /tmp/archive: $files_count"
+        echo "Total size of /tmp/archive: $folder_size"
 
-      - name: Check if more than 0 files downloaded
-        run: |
-          if [ "$files_count" -eq 0 ]; then
-            echo "No files to upload. Exiting."
-            exit 0
-          fi
+    - name: Check if more than 0 files downloaded
+      run: |
+        if [ "$files_count" -eq 0 ]; then
+          echo "No files to upload. Exiting."
+          exit 0
+        fi
 
-      - name: Upload to archive.org (First Identifier)
-        run: |
+    - name: Upload to archive.org (First Identifier)
+      run: |
+        ia upload ${{ inputs.identifier1 }} /tmp/archive/*
+
+    - name: Download second URL with wget
+      run: |
+        wget --mirror --page-requisites --convert-links --no-parent --quota=1G --no-clobber --random-wait -P /tmp/second_archive ${{ inputs.url }} || true
+
+    - name: Log number of files and total size (second archive)
+      run: |
+        files_count_second=$(find /tmp/second_archive -type f | wc -l)
+        folder_size_second=$(du -sh /tmp/second_archive | cut -f1)
+        echo "Number of files in /tmp/second_archive: $files_count_second"
+        echo "Total size of /tmp/second_archive: $folder_size_second"
+
+    - name: Upload second archive to archive.org (Second Identifier)
+      run: |
+        if [ "$files_count_second" -eq 0 ]; then
+          echo "No files in the second archive. Uploading the first archive instead."
           ia upload ${{ inputs.identifier1 }} /tmp/archive/*
-
-      - name: Download second URL with wget
-        run: |
-          wget --mirror --page-requisites --convert-links --no-parent --quota=1G --no-clobber --random-wait -P /tmp/second_archive ${{ inputs.url }} || true
-
-      - name: Log number of files and total size (second archive)
-        run: |
-          files_count_second=$(find /tmp/second_archive -type f | wc -l)
-          folder_size_second=$(du -sh /tmp/second_archive | cut -f1)
-          echo "Number of files in /tmp/second_archive: $files_count_second"
-          echo "Total size of /tmp/second_archive: $folder_size_second"
-
-      - name: Upload second archive to archive.org (Second Identifier)
-        run: |
-          if [ "$files_count_second" -eq 0 ]; then
-            echo "No files in the second archive. Uploading the first archive instead."
-            ia upload ${{ inputs.identifier1 }} /tmp/archive/*
-          else
-            echo "Uploading second archive."
-            ia upload ${{ inputs.identifier2 }} /tmp/second_archive/*
-          fi
+        else
+          echo "Uploading second archive."
+          ia upload ${{ inputs.identifier2 }} /tmp/second_archive/*
+        fi
