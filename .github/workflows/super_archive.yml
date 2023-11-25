@@ -34,6 +34,7 @@ jobs:
     - name: Archive to archive.org
       run: |
         url=${{ inputs.url }}
+        echo "========== URLs archived =========="
     
         echo "Archiving given page: $url"
     
@@ -47,18 +48,23 @@ jobs:
     
         # Retry loop for outlinks
         curl -sS "$url" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
-          echo "Archiving outlink: $outlink"
+          # Check if the URL has a valid format
+          if [[ $outlink =~ ^https?:// ]]; then
+            echo "Archiving outlink: $outlink"
     
-          max_retries=3
-          retry_counter=0
-          while [ $retry_counter -lt $max_retries ]; do
-            if curl -sS "https://web.archive.org/save/$outlink" > /dev/null; then
-              break
-            else
-              ((retry_counter++))
-              echo "Failed to archive outlink: $outlink. Retrying..."
-            fi
-          done
+            max_retries=3
+            retry_counter=0
+            while [ $retry_counter -lt $max_retries ]; do
+              if curl -sS "https://web.archive.org/save/$outlink" > /dev/null; then
+                break
+              else
+                ((retry_counter++))
+                echo "Failed to archive outlink: $outlink. Retrying..."
+              fi
+            done
+          else
+            echo "Skipping outlink with bad URL format: $outlink"
+          fi
         done
 
     - name: Download with wget
