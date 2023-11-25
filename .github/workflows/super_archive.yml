@@ -33,7 +33,18 @@ jobs:
 
       - name: Archive to archive.org
         run: |
-          curl -X POST -d "url=${{ inputs.url }}" https://web.archive.org/save/${{ inputs.url }}
+          url=${{ inputs.url }}
+          for url in "${archival_urls[@]}"; do    
+            # Save the main content
+            echo "Archiving $url"
+            curl -sS "https://web.archive.org/save/$url" > /dev/null
+            
+            # Save outlinks
+            curl -sS "$url" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
+              echo "Archiving outlink: $outlink"
+              curl -sS "https://web.archive.org/save/$outlink" > /dev/null
+            done
+          done
 
       - name: Download with wget
         run: |
