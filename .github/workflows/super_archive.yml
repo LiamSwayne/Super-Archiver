@@ -48,7 +48,7 @@ jobs:
 
       - name: Check if more than 0 files downloaded
         run: |
-          if [ $files_count -eq 0 ]; then
+          if [ "$files_count" -eq 0 ]; then
             echo "No files to upload. Exiting."
             exit 0
           fi
@@ -59,7 +59,7 @@ jobs:
 
       - name: Download second URL with wget
         run: |
-          wget --mirror --page-requisites --convert-links --no-parent --quota=1G --no-clobber --random-wait -P /tmp/archive ${{ inputs.url }} || true
+          wget --mirror --page-requisites --convert-links --no-parent --quota=1G --no-clobber --random-wait -P /tmp/second_archive ${{ inputs.url }} || true
 
       - name: Log number of files and total size (second archive)
         run: |
@@ -70,7 +70,7 @@ jobs:
 
       - name: Upload second archive to archive.org (Second Identifier)
         run: |
-          if [ $files_count_second -eq 0 ]; then
+          if [ "$files_count_second" -eq 0 ]; then
             echo "No files in the second archive. Uploading the first archive instead."
             ia upload ${{ inputs.identifier1 }} /tmp/archive/*
           else
