@@ -74,5 +74,6 @@ jobs:
             echo "No files in the second archive. Uploading the first archive instead."
             ia upload ${{ inputs.identifier1 }} /tmp/archive/*
           else
+            echo "Uploading second archive."
             ia upload ${{ inputs.identifier2 }} /tmp/second_archive/*
           fi
