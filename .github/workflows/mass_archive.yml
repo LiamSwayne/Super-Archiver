@@ -20,8 +20,6 @@ jobs:
         archival_urls=(${{ github.event.inputs.urls }})
         echo "========== URLs archived =========="
         for url in "${archival_urls[@]}"; do
-          # Use the URL in your archiving process (replace the following line with your archiving command)
           echo "$url"
-          # Replace the following line with your archiving command
           curl -sS "https://web.archive.org/save/$url" > /dev/null
         done
