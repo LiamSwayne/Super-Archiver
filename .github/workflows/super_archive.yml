@@ -46,6 +46,13 @@ jobs:
           echo "Number of files in /tmp/archive: $files_count"
           echo "Total size of /tmp/archive: $folder_size"
 
+      - name: Check if more than 0 files downloaded
+        run: |
+          if [ "$files_count" -eq 0 ]; then
+            echo "No files to upload. Exiting."
+            exit 0
+          fi
+
       - name: Upload to archive.org (First Identifier)
         run: |
           ia upload ${{ inputs.identifier1 }} /tmp/archive/*
@@ -63,4 +70,9 @@ jobs:
 
       - name: Upload second archive to archive.org (Second Identifier)
         run: |
-          ia upload ${{ inputs.identifier2 }} /tmp/second_archive/*
+          if [ "$files_count_second" -eq 0 ]; then
+            echo "No files in the second archive. Uploading the first archive instead."
+            ia upload ${{ inputs.identifier1 }} /tmp/archive/*
+          else
+            ia upload ${{ inputs.identifier2 }} /tmp/second_archive/*
+          fi
