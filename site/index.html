@@ -63,6 +63,9 @@
             let urlInput = document.getElementById('urlInput').value;
             let urls = urlInput.split('\n');
         
+            // Remove duplicates from the array
+            urls = Array.from(new Set(urls));
+        
             // Display the response message
             let responseMessage = document.getElementById('responseMessage');
         
@@ -72,7 +75,7 @@
                 let group = urls.slice(i, i + groupSize);
         
                 // Display the response message for each group
-                responseMessage.innerHTML = `<div>Archiving ${group.length} URLs...</div>`;
+                responseMessage.innerHTML = `<div>Archiving ${group.length} unique URLs...</div>`;
         
                 // Trigger the workflow for the current group
                 dispatchWorkflow(group);
