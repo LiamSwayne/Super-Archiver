@@ -62,13 +62,21 @@
         function archiveUrls() {
             let urlInput = document.getElementById('urlInput').value;
             let urls = urlInput.split('\n');
-
+        
             // Display the response message
             let responseMessage = document.getElementById('responseMessage');
-            responseMessage.innerHTML = `<div>Archive triggered for all URLs</div>`;
-
-            // Trigger the workflow for all URLs
-            dispatchWorkflow(urls);
+        
+            // Break the URLs into groups of 20
+            const groupSize = 20;
+            for (let i = 0; i < urls.length; i += groupSize) {
+                let group = urls.slice(i, i + groupSize);
+        
+                // Display the response message for each group
+                responseMessage.innerHTML = `<div>Archiving ${group.length} URLs...</div>`;
+        
+                // Trigger the workflow for the current group
+                dispatchWorkflow(group);
+            }
         }
 
         function dispatchWorkflow(urls) {
