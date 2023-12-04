@@ -44,5 +44,9 @@ jobs:
                 echo "Failed to archive outlink: $outlink. Retrying..."
               fi
             done
+
+            sleep 15s
           done || true  # Ignore errors in the outlink archiving process
+
+          sleep 15s
         done
