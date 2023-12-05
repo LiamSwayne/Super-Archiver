@@ -45,8 +45,8 @@ jobs:
               fi
             done
 
-            sleep 15s
+            sleep 8s
           done || true  # Ignore errors in the outlink archiving process
 
-          sleep 15s
+          sleep 8s
         done
