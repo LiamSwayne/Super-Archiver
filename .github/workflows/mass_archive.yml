@@ -19,7 +19,7 @@ jobs:
       run: |
         archival_urls=($(
           IFS=$'\n'   # Set the Internal Field Separator to newline
-          echo "${{ github.event.inputs.urls }}" | sed -n '1,20'
+          echo "${{ github.event.inputs.urls }}" | sed -n '1,20p'
         ))
         for url in "${archival_urls[@]}"; do
           echo "Archiving given page: $url"
