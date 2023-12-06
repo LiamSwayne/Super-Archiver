@@ -17,7 +17,10 @@ jobs:
 
     - name: Archive URLs (First Batch)
       run: |
-        archival_urls=(${{ github.event.inputs.urls | split('\n') | slice(0, 19) | join('\n') }})
+        archival_urls=($(
+          IFS=$'\n'   # Set the Internal Field Separator to newline
+          echo "${{ github.event.inputs.urls }}" | sed -n '0,19p'
+        ))
         for url in "${archival_urls[@]}"; do
           echo "Archiving given page: $url"
     
@@ -59,7 +62,10 @@ jobs:
 
     - name: Archive URLs (Second Batch)
       run: |
-        archival_urls=(${{ github.event.inputs.urls | split('\n') | slice(20, 39) | join('\n') }})
+        archival_urls=($(
+          IFS=$'\n'   # Set the Internal Field Separator to newline
+          echo "${{ github.event.inputs.urls }}" | sed -n '20,39p'
+        ))
         for url in "${archival_urls[@]}"; do
           echo "Archiving given page: $url"
     
@@ -101,7 +107,10 @@ jobs:
 
     - name: Archive URLs (Third Batch)
       run: |
-        archival_urls=(${{ github.event.inputs.urls | split('\n') | slice(40, 59) | join('\n') }})
+        archival_urls=($(
+          IFS=$'\n'   # Set the Internal Field Separator to newline
+          echo "${{ github.event.inputs.urls }}" | sed -n '40,59p'
+        ))
         for url in "${archival_urls[@]}"; do
           echo "Archiving given page: $url"
     
