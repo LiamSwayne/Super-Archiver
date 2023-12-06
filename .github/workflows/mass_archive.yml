@@ -28,8 +28,12 @@ jobs:
           max_retries=3
           retry_counter=0
           while [ $retry_counter -lt $max_retries ]; do
-            curl -sS "https://web.archive.org/save/$url" > /dev/null && break
-            ((retry_counter++))
+            if curl -sS "https://web.archive.org/save/$url" > /dev/null; then
+              break
+            else
+              ((retry_counter++))
+              echo "Failed to archive outlink: $outlink. Retrying..."
+            fi
           done
       
           # Retry loop for outlinks
@@ -47,10 +51,10 @@ jobs:
               fi
             done
 
-            sleep 8s
+            sleep 6s
           done || true  # Ignore errors in the outlink archiving process
 
-          sleep 8s
+          sleep 6s
         done
 
   archive_second_batch:
@@ -73,8 +77,12 @@ jobs:
           max_retries=3
           retry_counter=0
           while [ $retry_counter -lt $max_retries ]; do
-            curl -sS "https://web.archive.org/save/$url" > /dev/null && break
-            ((retry_counter++))
+            if curl -sS "https://web.archive.org/save/$url" > /dev/null; then
+              break
+            else
+              ((retry_counter++))
+              echo "Failed to archive outlink: $outlink. Retrying..."
+            fi
           done
       
           # Retry loop for outlinks
@@ -92,10 +100,10 @@ jobs:
               fi
             done
 
-            sleep 8s
+            sleep 6s
           done || true  # Ignore errors in the outlink archiving process
 
-          sleep 8s
+          sleep 6s
         done
 
   archive_third_batch:
@@ -118,8 +126,12 @@ jobs:
           max_retries=3
           retry_counter=0
           while [ $retry_counter -lt $max_retries ]; do
-            curl -sS "https://web.archive.org/save/$url" > /dev/null && break
-            ((retry_counter++))
+            if curl -sS "https://web.archive.org/save/$url" > /dev/null; then
+              break
+            else
+              ((retry_counter++))
+              echo "Failed to archive outlink: $outlink. Retrying..."
+            fi
           done
       
           # Retry loop for outlinks
@@ -137,10 +149,10 @@ jobs:
               fi
             done
 
-            sleep 8s
+            sleep 6s
           done || true  # Ignore errors in the outlink archiving process
 
-          sleep 8s
+          sleep 6s
         done
 
   archive_fourth_batch:
@@ -150,7 +162,7 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v2
 
-    - name: Archive URLs (Third Batch)
+    - name: Archive URLs (Fourth Batch)
       run: |
         archival_urls=($(
           IFS=$'\n'   # Set the Internal Field Separator to newline
@@ -163,8 +175,12 @@ jobs:
           max_retries=3
           retry_counter=0
           while [ $retry_counter -lt $max_retries ]; do
-            curl -sS "https://web.archive.org/save/$url" > /dev/null && break
-            ((retry_counter++))
+            if curl -sS "https://web.archive.org/save/$url" > /dev/null; then
+              break
+            else
+              ((retry_counter++))
+              echo "Failed to archive outlink: $outlink. Retrying..."
+            fi
           done
       
           # Retry loop for outlinks
@@ -182,10 +198,10 @@ jobs:
               fi
             done
 
-            sleep 8s
+            sleep 6s
           done || true  # Ignore errors in the outlink archiving process
 
-          sleep 8s
+          sleep 6s
         done
 
   archive_fifth_batch:
@@ -195,7 +211,7 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v2
 
-    - name: Archive URLs (Third Batch)
+    - name: Archive URLs (Fifth Batch)
       run: |
         archival_urls=($(
           IFS=$'\n'   # Set the Internal Field Separator to newline
@@ -208,8 +224,12 @@ jobs:
           max_retries=3
           retry_counter=0
           while [ $retry_counter -lt $max_retries ]; do
-            curl -sS "https://web.archive.org/save/$url" > /dev/null && break
-            ((retry_counter++))
+            if curl -sS "https://web.archive.org/save/$url" > /dev/null; then
+              break
+            else
+              ((retry_counter++))
+              echo "Failed to archive outlink: $outlink. Retrying..."
+            fi
           done
       
           # Retry loop for outlinks
@@ -227,10 +247,10 @@ jobs:
               fi
             done
 
-            sleep 8s
+            sleep 6s
           done || true  # Ignore errors in the outlink archiving process
 
-          sleep 8s
+          sleep 6s
         done
 
   archive_sixth_batch:
@@ -240,7 +260,7 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v2
 
-    - name: Archive URLs (Third Batch)
+    - name: Archive URLs (Sixth Batch)
       run: |
         archival_urls=($(
           IFS=$'\n'   # Set the Internal Field Separator to newline
@@ -253,8 +273,12 @@ jobs:
           max_retries=3
           retry_counter=0
           while [ $retry_counter -lt $max_retries ]; do
-            curl -sS "https://web.archive.org/save/$url" > /dev/null && break
-            ((retry_counter++))
+            if curl -sS "https://web.archive.org/save/$url" > /dev/null; then
+              break
+            else
+              ((retry_counter++))
+              echo "Failed to archive outlink: $outlink. Retrying..."
+            fi
           done
       
           # Retry loop for outlinks
@@ -272,8 +296,8 @@ jobs:
               fi
             done
 
-            sleep 8s
+            sleep 6s
           done || true  # Ignore errors in the outlink archiving process
 
-          sleep 8s
+          sleep 6s
         done
