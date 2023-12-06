@@ -17,7 +17,7 @@ jobs:
 
     - name: Archive URLs (First Batch)
       run: |
-        archival_urls=(${{ github.event.inputs.urls[@0,19]}})
+        archival_urls=(${{ github.event.inputs.urls | split('\n') | slice(0, 19) | join('\n') }})
         for url in "${archival_urls[@]}"; do
           echo "Archiving given page: $url"
     
@@ -59,7 +59,7 @@ jobs:
 
     - name: Archive URLs (Second Batch)
       run: |
-        archival_urls=(${{ github.event.inputs.urls[@20,39]}})
+        archival_urls=(${{ github.event.inputs.urls | split('\n') | slice(20, 39) | join('\n') }})
         for url in "${archival_urls[@]}"; do
           echo "Archiving given page: $url"
     
@@ -101,7 +101,7 @@ jobs:
 
     - name: Archive URLs (Third Batch)
       run: |
-        archival_urls=(${{ github.event.inputs.urls[@40,59]}})
+        archival_urls=(${{ github.event.inputs.urls | split('\n') | slice(40, 59) | join('\n') }})
         for url in "${archival_urls[@]}"; do
           echo "Archiving given page: $url"
     
