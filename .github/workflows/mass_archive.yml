@@ -32,7 +32,7 @@ jobs:
               break
             else
               ((retry_counter++))
-              echo "Failed to archive outlink: $outlink. Retrying..."
+              echo "Failed to archive main page: $url. Retrying..."
             fi
           done
       
@@ -81,7 +81,7 @@ jobs:
               break
             else
               ((retry_counter++))
-              echo "Failed to archive outlink: $outlink. Retrying..."
+              echo "Failed to archive main page: $url. Retrying..."
             fi
           done
       
@@ -130,7 +130,7 @@ jobs:
               break
             else
               ((retry_counter++))
-              echo "Failed to archive outlink: $outlink. Retrying..."
+              echo "Failed to archive main page: $url. Retrying..."
             fi
           done
       
@@ -179,7 +179,7 @@ jobs:
               break
             else
               ((retry_counter++))
-              echo "Failed to archive outlink: $outlink. Retrying..."
+              echo "Failed to archive main page: $url. Retrying..."
             fi
           done
       
@@ -228,7 +228,7 @@ jobs:
               break
             else
               ((retry_counter++))
-              echo "Failed to archive outlink: $outlink. Retrying..."
+              echo "Failed to archive main page: $url. Retrying..."
             fi
           done
       
@@ -277,7 +277,7 @@ jobs:
               break
             else
               ((retry_counter++))
-              echo "Failed to archive outlink: $outlink. Retrying..."
+              echo "Failed to archive main page: $url. Retrying..."
             fi
           done
       
