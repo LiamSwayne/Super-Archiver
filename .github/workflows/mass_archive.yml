@@ -8,14 +8,14 @@ on:
         required: true
 
 jobs:
-  archive:
+  archive_given_page:
     runs-on: ubuntu-latest
 
     steps:
     - name: Check out repository
       uses: actions/checkout@v2
 
-    - name: Archive URLs
+    - name: Archive Given Pages
       run: |
         archival_urls=(${{ github.event.inputs.urls }})
         
@@ -29,6 +29,23 @@ jobs:
             curl -sS "https://web.archive.org/save/$url" > /dev/null && break
             ((retry_counter++))
           done
+      
+          sleep 8s
+        done
+
+  archive_outlinks:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+
+    - name: Archive Outlinks
+      run: |
+        archival_urls=(${{ github.event.inputs.urls }})
+        
+        for url in "${archival_urls[@]}"; do
+          echo "Archiving outlinks for page: $url"
       
           # Retry loop for outlinks
           curl -sS "$url" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
