@@ -12,9 +12,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out repository
-      uses: actions/checkout@v2
-
     - name: Archive URLs (First Batch)
       run: |
         archival_urls=($(
@@ -61,9 +58,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out repository
-      uses: actions/checkout@v2
-
     - name: Archive URLs (Second Batch)
       run: |
         archival_urls=($(
@@ -110,9 +104,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out repository
-      uses: actions/checkout@v2
-
     - name: Archive URLs (Third Batch)
       run: |
         archival_urls=($(
@@ -159,9 +150,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out repository
-      uses: actions/checkout@v2
-
     - name: Archive URLs (Fourth Batch)
       run: |
         archival_urls=($(
@@ -208,9 +196,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out repository
-      uses: actions/checkout@v2
-
     - name: Archive URLs (Fifth Batch)
       run: |
         archival_urls=($(
@@ -257,9 +242,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out repository
-      uses: actions/checkout@v2
-
     - name: Archive URLs (Sixth Batch)
       run: |
         archival_urls=($(
