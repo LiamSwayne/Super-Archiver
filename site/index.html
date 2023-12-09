@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Archive</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #333;
+            color: #fff;
+            font-size: 20px;
+            font-family: 'Courier New', Courier;
+        }
+
+        div {
+            text-align: center;
+            margin: 10px;
+        }
+
+        a {
+            color: white;
+            font-weight: 900;
+            word-break: break-word;
+            hyphens: none;
+        }
+
+        label, input, textarea, button {
+            margin: 5px;
+        }
+
+        #iframeContainer {
+            width: 100%;
+            height: 500px;
+        }
+
+        #footer {
+            position: fixed;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div>Archive multiple pages (including outlinks) to web.archive.org one at a time with a 30-second delay between each URL.</div>
+    <label for="urlInput">Paste URLs (separated by newlines):</label>
+    <textarea id="urlInput" style="min-width: 460px;"></textarea>
+    <button id="archiveUrlsButton">Archive URLs</button>
+    <div id="responseMessage">Closing this tab will abort archival of queued URLs.</div>
+    <div id="iframeContainer">
+        <iframe id="archiveIframe" frameborder="0" width="100%" height="100%"></iframe>
+    </div>
+
+    <div id="footer">Your use of this tool <span style="font-weight: 900;">must</span> comply with the Internet Archive's <a href="https://archive.org/about/terms.php">Terms of Use</a>. Improve this page on <a href="https://github.com/LiamSwayne/Super-Archiver">GitHub</a>.</div>
+
+    <script>
+        document.getElementById('archiveUrlsButton').addEventListener('click', () => {
+            archiveUrls();
+        });
+
+        function archiveUrls() {
+            let urlInput = document.getElementById('urlInput').value;
+            let urls = urlInput.split('\n');
+        
+            // Remove duplicates from the array
+            urls = Array.from(new Set(urls));
+        
+            // Display the response message
+            let responseMessage = document.getElementById('responseMessage');
+            responseMessage.innerHTML = `<div>Archiving ${urls.length} unique URLs...</div>`;
+        
+            // Archive each URL one at a time using iframes
+            archiveNextUrl(urls, 0);
+        }
+
+        function archiveNextUrl(urls, currentIndex) {
+            if (currentIndex < urls.length) {
+                let currentUrl = urls[currentIndex];
+                let archiveIframe = document.getElementById('archiveIframe');
+
+                archiveIframe.src = `https://web.archive.org/save/${currentUrl}`;
+
+                archiveIframe.onload = function() {
+                    let remainingUrls = urls.length - (currentIndex + 1);
+                    let responseMessage = document.getElementById('responseMessage');
+                    responseMessage.innerHTML = `<div>Archived ${currentUrl}. ${remainingUrls} URLs remaining. Please do not close the tab.</div>`;
+
+                    // Delay to stay within limit
+                    setTimeout(function() {
+                        archiveNextUrl(urls, currentIndex + 1);
+                    }, 45000);
+                };
+            } else {
+                // All URLs have been archived
+                let responseMessage = document.getElementById('responseMessage');
+                responseMessage.innerHTML = `<div>All URLs have been archived. You can close the tab now.</div>`;
+            }
+        }
+    </script>
+</body>
+</html>
