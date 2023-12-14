@@ -50,6 +50,8 @@ jobs:
           sleep 8s
         done
 
+        echo "breakpoint"
+
         # Update total counts
         current_url_count=$(<total_url_count.txt)
         new_url_count=$((current_url_count + total_url_count))
