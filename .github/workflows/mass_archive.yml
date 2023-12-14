@@ -25,7 +25,7 @@ jobs:
           retry_counter=0
           while [ $retry_counter -lt $max_retries ]; do
             echo "breakpoint"
-            curl -sS 'https://web.archive.org/save/$url' > /dev/null && break
+            curl -sS 'https://web.archive.org/save/$url' && break
             echo "breakpoint 2"
             ((retry_counter++))
           done || true  # Ignore errors
