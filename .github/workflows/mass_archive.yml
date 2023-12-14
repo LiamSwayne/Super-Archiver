@@ -30,6 +30,8 @@ jobs:
 
           ((total_url_count++))
 
+          echo "breakpoint"
+
           # Retry loop for outlinks
           curl -sS "${url}" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
 
