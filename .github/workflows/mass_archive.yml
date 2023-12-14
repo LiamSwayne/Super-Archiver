@@ -53,11 +53,8 @@ jobs:
         # Update total counts
         current_url_count=$(<total_url_count.txt)
         new_url_count=$((current_url_count + total_url_count))
-        echo $new_url_count > total_url_count.txt
 
         # Commit changes and push to origin
-        git config --global user.email "you@example.com"
-        git config --global user.name "Your Name"
         git add total_url_count.txt
         git commit -m "Update total URL count"
         git push origin
