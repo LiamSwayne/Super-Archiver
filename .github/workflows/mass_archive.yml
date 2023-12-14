@@ -15,10 +15,14 @@ jobs:
     - name: Archive URLs
       run: |
         archival_urls=(${{ github.event.inputs.urls }})
+        echo "breakpoint"
         total_url_count=0
         total_outlink_count=0
+
+        echo "breakpoint"
         
         for url in "${archival_urls[@]}"; do
+          echo "breakpoint"
     
           # Retry loop for the main content
           max_retries=3
