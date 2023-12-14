@@ -15,6 +15,8 @@ jobs:
     - name: Archive URLs
       run: |
         archival_urls=(${{ github.event.inputs.urls }})
+        total_url_count=0
+        total_outlink_count=0
         
         for url in "${archival_urls[@]}"; do
     
@@ -25,6 +27,8 @@ jobs:
             curl -sS "https://web.archive.org/save/${url}" > /dev/null && break
             ((retry_counter++))
           done || true  # Ignore errors
+          
+          ((total_url_count++))
       
           # Retry loop for outlinks
           curl -sS "${url}" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
@@ -40,7 +44,20 @@ jobs:
             done
 
             sleep 8s
+            ((total_outlink_count++))
           done || true  # Ignore errors
 
           sleep 8s
         done
+
+        # Update total counts
+        current_url_count=$(<total_url_count.txt)
+        new_url_count=$((current_url_count + total_url_count))
+        echo $new_url_count > total_url_count.txt
+
+        # Commit changes and push to origin
+        git config --global user.email "you@example.com"
+        git config --global user.name "Your Name"
+        git add total_url_count.txt
+        git commit -m "Update total URL count"
+        git push origin
