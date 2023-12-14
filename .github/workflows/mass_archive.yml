@@ -17,8 +17,8 @@ jobs:
         archival_urls=(${{ github.event.inputs.urls }})
         
         for url in "${archival_urls[@]}"; do
-          # Encode the URL
-          encoded_url=$(printf "%s" "$url" | jq -s -R -r @uri)
+          # Replace each "&" with "%26"
+          encoded_url=$(echo "$url" | sed 's/&/%26/g')
     
           # Retry loop for the main content
           max_retries=3
@@ -30,9 +30,8 @@ jobs:
       
           # Retry loop for outlinks
           curl -sS "$encoded_url" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
-      
-            # Encode the outlink URL
-            encoded_outlink=$(printf "%s" "$outlink" | jq -s -R -r @uri)
+            # Replace each "&" with "%26"
+            encoded_outlink=$(echo "$outlink" | sed 's/&/%26/g')
       
             max_retries=3
             retry_counter=0
@@ -43,9 +42,9 @@ jobs:
                 ((retry_counter++))
               fi
             done
-
+  
             sleep 8s
           done || true  # Ignore errors
-
+  
           sleep 8s
         done
