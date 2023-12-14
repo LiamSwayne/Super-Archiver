@@ -17,22 +17,27 @@ jobs:
         archival_urls=(${{ github.event.inputs.urls }})
         
         for url in "${archival_urls[@]}"; do
+          # Encode the URL
+          encoded_url=$(printf "%s" "$url" | jq -s -R -r @uri)
     
           # Retry loop for the main content
           max_retries=3
           retry_counter=0
           while [ $retry_counter -lt $max_retries ]; do
-            curl -sS "https://web.archive.org/save/$url" > /dev/null && break
+            curl -sS "https://web.archive.org/save/$encoded_url" > /dev/null && break
             ((retry_counter++))
           done || true  # Ignore errors
       
           # Retry loop for outlinks
-          curl -sS "$url" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
+          curl -sS "$encoded_url" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
+      
+            # Encode the outlink URL
+            encoded_outlink=$(printf "%s" "$outlink" | jq -s -R -r @uri)
       
             max_retries=3
             retry_counter=0
             while [ $retry_counter -lt $max_retries ]; do
-              if curl -sS "https://web.archive.org/save/$outlink" > /dev/null; then
+              if curl -sS "https://web.archive.org/save/$encoded_outlink" > /dev/null; then
                 break
               else
                 ((retry_counter++))
