@@ -24,18 +24,13 @@ jobs:
           max_retries=3
           retry_counter=0
           while [ $retry_counter -lt $max_retries ]; do
-            echo "breakpoint"
-            echo "$url"
             if curl -sv "https://web.archive.org/save/$url" > /dev/null; then
               break
             fi
-            echo "breakpoint 2"
             ((retry_counter++))
           done || true  # Ignore errors
 
           ((total_url_count++))
-
-          echo "breakpoint 3"
 
           # Retry loop for outlinks
           curl -sS "$url" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
@@ -56,8 +51,6 @@ jobs:
 
           sleep 8s
         done
-
-        echo "breakpoint 4"
 
         # Update total counts
         current_url_count=$(<total_url_count.txt)
