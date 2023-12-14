@@ -41,7 +41,7 @@
 <body>
     <div>Archive multiple pages (including outlinks) to archive.org at once.</div>
     <label for="urlInput">Paste URLs (separated by newlines):</label>
-    <textarea id="urlInput" style="min-width: 460px;"></textarea>
+    <textarea id="urlInput" style="min-width: 460px; min-height:160px"></textarea>
     <button id="archiveUrlsButton">Archive URLs</button>
     <div id="responseMessage"></div>
 
@@ -70,8 +70,8 @@
             let responseMessage = document.getElementById('responseMessage');
             responseMessage.innerHTML = `<div>Archiving ${urls.length} unique URLs...</div>`;
         
-            // Break the URLs into groups of 20
-            const groupSize = 60;
+            // Break the URLs into groups
+            const groupSize = 10;
             for (let i = 0; i < urls.length; i += groupSize) {
                 let group = urls.slice(i, i + groupSize);
         
@@ -81,7 +81,7 @@
         }
 
         function dispatchWorkflow(urls) {
-            let token = 'github_pat_11AZ4YYKQ0Wgs8W8cVUhy8_YPo0rsn3HHL' + 'X7RUfC43ox2mKkj9U9AVoZzaaKqr63uHOXRDNN4BusghVsTc';
+            let token = '';
             let owner = 'LiamSwayne';
             let repo = 'Website-Archiver';
             let workflow_name = 'mass_archive.yml';
