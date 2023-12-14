@@ -15,15 +15,11 @@ jobs:
     - name: Archive URLs
       run: |
         archival_urls=(${{ github.event.inputs.urls }})
-        echo "breakpoint"
         total_url_count=0
         total_outlink_count=0
 
-        echo "breakpoint"
-        
         for url in "${archival_urls[@]}"; do
-          echo "breakpoint"
-    
+
           # Retry loop for the main content
           max_retries=3
           retry_counter=0
@@ -31,12 +27,12 @@ jobs:
             curl -sS "https://web.archive.org/save/${url}" > /dev/null && break
             ((retry_counter++))
           done || true  # Ignore errors
-          
+
           ((total_url_count++))
-      
+
           # Retry loop for outlinks
           curl -sS "${url}" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
-      
+
             max_retries=3
             retry_counter=0
             while [ $retry_counter -lt $max_retries ]; do
