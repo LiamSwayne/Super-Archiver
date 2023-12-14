@@ -8,16 +8,14 @@ on:
         required: true
 
 jobs:
-  archive_first_batch:
+  archive:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Archive URLs (First Batch)
+    - name: Archive URLs
       run: |
-        archival_urls=($(
-          IFS=$'\n'   # Set the Internal Field Separator to newline
-          echo "${{ github.event.inputs.urls }}" | sed -n '1,10p'
-        ))
+        archival_urls=(${{ github.event.inputs.urls }})
+        
         for url in "${archival_urls[@]}"; do
           echo "Archiving given page: $url"
     
@@ -25,13 +23,9 @@ jobs:
           max_retries=3
           retry_counter=0
           while [ $retry_counter -lt $max_retries ]; do
-            if curl -sS "https://web.archive.org/save/$url" > /dev/null; then
-              break
-            else
-              ((retry_counter++))
-              echo "Failed to archive main page: $url. Retrying..."
-            fi
-          done
+            curl -sS "https://web.archive.org/save/$url" > /dev/null && break
+            ((retry_counter++))
+          done || true  # Ignore errors
       
           # Retry loop for outlinks
           curl -sS "$url" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
@@ -48,238 +42,8 @@ jobs:
               fi
             done
 
-            sleep 6s
-          done || true  # Ignore errors in the outlink archiving process
+            sleep 8s
+          done || true  # Ignore errors
 
-          sleep 6s
-        done
-
-  archive_second_batch:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Archive URLs (Second Batch)
-      run: |
-        archival_urls=($(
-          IFS=$'\n'   # Set the Internal Field Separator to newline
-          echo "${{ github.event.inputs.urls }}" | sed -n '11,20p'
-        ))
-        for url in "${archival_urls[@]}"; do
-          echo "Archiving given page: $url"
-    
-          # Retry loop for the main content
-          max_retries=3
-          retry_counter=0
-          while [ $retry_counter -lt $max_retries ]; do
-            if curl -sS "https://web.archive.org/save/$url" > /dev/null; then
-              break
-            else
-              ((retry_counter++))
-              echo "Failed to archive main page: $url. Retrying..."
-            fi
-          done
-      
-          # Retry loop for outlinks
-          curl -sS "$url" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
-            echo "Archiving outlink: $outlink"
-      
-            max_retries=3
-            retry_counter=0
-            while [ $retry_counter -lt $max_retries ]; do
-              if curl -sS "https://web.archive.org/save/$outlink" > /dev/null; then
-                break
-              else
-                ((retry_counter++))
-                echo "Failed to archive outlink: $outlink. Retrying..."
-              fi
-            done
-
-            sleep 6s
-          done || true  # Ignore errors in the outlink archiving process
-
-          sleep 6s
-        done
-
-  archive_third_batch:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Archive URLs (Third Batch)
-      run: |
-        archival_urls=($(
-          IFS=$'\n'   # Set the Internal Field Separator to newline
-          echo "${{ github.event.inputs.urls }}" | sed -n '21,30p'
-        ))
-        for url in "${archival_urls[@]}"; do
-          echo "Archiving given page: $url"
-    
-          # Retry loop for the main content
-          max_retries=3
-          retry_counter=0
-          while [ $retry_counter -lt $max_retries ]; do
-            if curl -sS "https://web.archive.org/save/$url" > /dev/null; then
-              break
-            else
-              ((retry_counter++))
-              echo "Failed to archive main page: $url. Retrying..."
-            fi
-          done
-      
-          # Retry loop for outlinks
-          curl -sS "$url" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
-            echo "Archiving outlink: $outlink"
-      
-            max_retries=3
-            retry_counter=0
-            while [ $retry_counter -lt $max_retries ]; do
-              if curl -sS "https://web.archive.org/save/$outlink" > /dev/null; then
-                break
-              else
-                ((retry_counter++))
-                echo "Failed to archive outlink: $outlink. Retrying..."
-              fi
-            done
-
-            sleep 6s
-          done || true  # Ignore errors in the outlink archiving process
-
-          sleep 6s
-        done
-
-  archive_fourth_batch:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Archive URLs (Fourth Batch)
-      run: |
-        archival_urls=($(
-          IFS=$'\n'   # Set the Internal Field Separator to newline
-          echo "${{ github.event.inputs.urls }}" | sed -n '31,40p'
-        ))
-        for url in "${archival_urls[@]}"; do
-          echo "Archiving given page: $url"
-    
-          # Retry loop for the main content
-          max_retries=3
-          retry_counter=0
-          while [ $retry_counter -lt $max_retries ]; do
-            if curl -sS "https://web.archive.org/save/$url" > /dev/null; then
-              break
-            else
-              ((retry_counter++))
-              echo "Failed to archive main page: $url. Retrying..."
-            fi
-          done
-      
-          # Retry loop for outlinks
-          curl -sS "$url" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
-            echo "Archiving outlink: $outlink"
-      
-            max_retries=3
-            retry_counter=0
-            while [ $retry_counter -lt $max_retries ]; do
-              if curl -sS "https://web.archive.org/save/$outlink" > /dev/null; then
-                break
-              else
-                ((retry_counter++))
-                echo "Failed to archive outlink: $outlink. Retrying..."
-              fi
-            done
-
-            sleep 6s
-          done || true  # Ignore errors in the outlink archiving process
-
-          sleep 6s
-        done
-
-  archive_fifth_batch:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Archive URLs (Fifth Batch)
-      run: |
-        archival_urls=($(
-          IFS=$'\n'   # Set the Internal Field Separator to newline
-          echo "${{ github.event.inputs.urls }}" | sed -n '41,50p'
-        ))
-        for url in "${archival_urls[@]}"; do
-          echo "Archiving given page: $url"
-    
-          # Retry loop for the main content
-          max_retries=3
-          retry_counter=0
-          while [ $retry_counter -lt $max_retries ]; do
-            if curl -sS "https://web.archive.org/save/$url" > /dev/null; then
-              break
-            else
-              ((retry_counter++))
-              echo "Failed to archive main page: $url. Retrying..."
-            fi
-          done
-      
-          # Retry loop for outlinks
-          curl -sS "$url" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
-            echo "Archiving outlink: $outlink"
-      
-            max_retries=3
-            retry_counter=0
-            while [ $retry_counter -lt $max_retries ]; do
-              if curl -sS "https://web.archive.org/save/$outlink" > /dev/null; then
-                break
-              else
-                ((retry_counter++))
-                echo "Failed to archive outlink: $outlink. Retrying..."
-              fi
-            done
-
-            sleep 6s
-          done || true  # Ignore errors in the outlink archiving process
-
-          sleep 6s
-        done
-
-  archive_sixth_batch:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Archive URLs (Sixth Batch)
-      run: |
-        archival_urls=($(
-          IFS=$'\n'   # Set the Internal Field Separator to newline
-          echo "${{ github.event.inputs.urls }}" | sed -n '51,60p'
-        ))
-        for url in "${archival_urls[@]}"; do
-          echo "Archiving given page: $url"
-    
-          # Retry loop for the main content
-          max_retries=3
-          retry_counter=0
-          while [ $retry_counter -lt $max_retries ]; do
-            if curl -sS "https://web.archive.org/save/$url" > /dev/null; then
-              break
-            else
-              ((retry_counter++))
-              echo "Failed to archive main page: $url. Retrying..."
-            fi
-          done
-      
-          # Retry loop for outlinks
-          curl -sS "$url" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
-            echo "Archiving outlink: $outlink"
-      
-            max_retries=3
-            retry_counter=0
-            while [ $retry_counter -lt $max_retries ]; do
-              if curl -sS "https://web.archive.org/save/$outlink" > /dev/null; then
-                break
-              else
-                ((retry_counter++))
-                echo "Failed to archive outlink: $outlink. Retrying..."
-              fi
-            done
-
-            sleep 6s
-          done || true  # Ignore errors in the outlink archiving process
-
-          sleep 6s
+          sleep 8s
         done
