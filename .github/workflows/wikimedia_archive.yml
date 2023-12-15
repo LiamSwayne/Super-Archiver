@@ -1,4 +1,4 @@
-name: Mass Archive
+name: Wikimedia Archive
 
 on:
   workflow_dispatch:
