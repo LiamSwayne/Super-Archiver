@@ -16,7 +16,7 @@ jobs:
       run: |
         archival_urls=($(echo "${{ github.event.inputs.urls }}"))
 
-        for url in "${archival_urls[@]}"; do    
+        for url in "${archival_urls[@]}"; do
           # Retry loop for the main content
           max_retries=3
           retry_counter=0
@@ -28,9 +28,9 @@ jobs:
               echo "Failed to archive main page: $url. Retrying..."
             fi
           done || true
-      
+
           # Retry loop for outlinks
-          curl -sS "$url" | grep -oP 'href="\K[^"]+' | while read -r outlink; do      
+          curl -sS "$url" | grep -oP 'href="\K[^"]+' | while read -r outlink; do
             max_retries=3
             retry_counter=0
             while [ $retry_counter -lt $max_retries ]; do
