@@ -7,6 +7,10 @@ on:
         description: 'List of URLs (separated by newlines)'
         required: true
 
+concurrency:
+  group: archive-workflow
+  cancel-in-progress: false
+
 jobs:
   archive:
     runs-on: ubuntu-latest
