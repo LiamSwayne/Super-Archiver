@@ -1,0 +1,52 @@
+name: Mass Archive
+
+on:
+  workflow_dispatch:
+    inputs:
+      start-number:
+        description: 'Start number for Wikimedia Commons items'
+        required: true
+
+jobs:
+  archive_commons_items:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Archive Wikimedia Commons Items
+      run: |
+        start_number=${{ github.event.inputs.start-number }}
+        
+        for ((i = $start_number; i < $start_number + 10; i++)); do
+          api_url="https://commons.wikimedia.org/w/api.php?action=query&format=json&prop=imageinfo&iiprop=url&pageids=$i"
+          
+          # Retrieve information about the item
+          response=$(curl -sS $api_url)
+          
+          # Extract descriptionurl
+          description_url=$(echo $response | jq -r '.query.pages | .[] | .imageinfo[0].descriptionurl')
+          
+          # Archive the descriptionurl
+          if [ -n "$description_url" ]; then
+            curl -sS "https://web.archive.org/save/$description_url"
+          fi
+          
+          # Extract outlinks
+          outlinks=$(curl -sS $description_url | grep -oP 'href="\K[^"]+')
+          
+          # Archive each outlink
+          for outlink in $outlinks; do
+            curl -sS "https://web.archive.org/save/$outlink"
+          done
+          
+          # Archive descriptionshorturl
+          description_shorturl=$(echo $response | jq -r '.query.pages | .[] | .imageinfo[0].descriptionshorturl')
+          if [ -n "$description_shorturl" ]; then
+            curl -sS "https://web.archive.org/save/$description_shorturl"
+          fi
+          
+          # Archive the image URL
+          image_url=$(echo $response | jq -r '.query.pages | .[] | .imageinfo[0].url')
+          if [ -n "$image_url" ]; then
+            curl -sS "https://web.archive.org/save/$image_url"
+          fi
+        done
