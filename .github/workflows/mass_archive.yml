@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Archive URLs (First Batch) and Update Counter
+    - name: Archive URLs and Update Counter
       run: |
         archival_urls=($(echo "${{ github.event.inputs.urls }}"))
 
