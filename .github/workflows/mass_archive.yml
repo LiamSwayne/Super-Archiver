@@ -12,9 +12,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Archive URLs (First Batch)
+    - name: Archive URLs (First Batch) and Update Counter
       run: |
         archival_urls=($(echo "${{ github.event.inputs.urls }}"))
+
+        # Initialize counter
+        counter=0
 
         for url in "${archival_urls[@]}"; do
           # Retry loop for the main content
@@ -22,6 +25,7 @@ jobs:
           retry_counter=0
           while [ $retry_counter -lt $max_retries ]; do
             if curl -sS "https://web.archive.org/save/$url" > /dev/null; then
+              ((counter++))  # Increment counter on successful archive
               break
             else
               ((retry_counter++))
@@ -35,6 +39,7 @@ jobs:
             retry_counter=0
             while [ $retry_counter -lt $max_retries ]; do
               if curl -sS "https://web.archive.org/save/$outlink" > /dev/null; then
+                ((counter++))  # Increment counter on successful archive
                 break
               else
                 ((retry_counter++))
@@ -43,3 +48,16 @@ jobs:
             done || true
           done
         done
+
+        # Update total count
+        current_count=$(<total_url_count.txt)
+        new_count=$((current_count + counter))
+        echo $new_count > total_url_count.txt
+
+        # Commit and push changes
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions"
+        git pull origin main
+        git add total_url_count.txt
+        git commit -m "Update total URL count"
+        git push origin main
