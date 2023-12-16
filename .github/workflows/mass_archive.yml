@@ -62,5 +62,5 @@ jobs:
         git config --local user.name "GitHub Actions"
         git pull origin main
         git add total_url_count.txt
-        git commit -m "Update total URL count"
+        git commit -m "🤖 Update total URL count"
         git push origin main
