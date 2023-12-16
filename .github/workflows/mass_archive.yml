@@ -8,7 +8,7 @@ on:
         required: true
 
 jobs:
-  archive_first_batch:
+  archive:
     runs-on: ubuntu-latest
 
     steps:
