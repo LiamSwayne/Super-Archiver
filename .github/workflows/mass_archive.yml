@@ -12,15 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
-    
-    - name: Archive URLs and Update Counter
+    - name: Archive URLs
       run: |
         archival_urls=($(echo "${{ github.event.inputs.urls }}"))
-
-        # Initialize counter
-        counter=0
 
         for url in "${archival_urls[@]}"; do
           # Retry loop for the main content
@@ -28,12 +22,10 @@ jobs:
           retry_counter=0
           while [ $retry_counter -lt $max_retries ]; do
             if curl -sS "https://web.archive.org/save/$url" > /dev/null; then
-              ((counter++))  # Increment counter on successful archive
               break
             else
               ((retry_counter++))
               echo "Failed to archive main page: $url. Retrying..."
-              sleep 8
             fi
           done || true
 
@@ -43,26 +35,11 @@ jobs:
             retry_counter=0
             while [ $retry_counter -lt $max_retries ]; do
               if curl -sS "https://web.archive.org/save/$outlink" > /dev/null; then
-                ((counter++))  # Increment counter on successful archive
                 break
               else
                 ((retry_counter++))
                 echo "Failed to archive outlink: $outlink. Retrying..."
-                sleep 8
               fi
             done || true
           done
         done
-
-        # Update total count
-        current_count=$(<total_url_count.txt)
-        new_count=$((current_count + counter))
-        echo $new_count > total_url_count.txt
-
-        # Commit and push changes
-        git config --local user.email "actions@github.com"
-        git config --local user.name "GitHub Actions"
-        git pull origin main
-        git add total_url_count.txt
-        git commit -m "🤖 Update total URL count"
-        git push origin main
