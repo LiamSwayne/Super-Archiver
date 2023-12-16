@@ -33,6 +33,7 @@ jobs:
             else
               ((retry_counter++))
               echo "Failed to archive main page: $url. Retrying..."
+              sleep 8
             fi
           done || true
 
@@ -47,6 +48,7 @@ jobs:
               else
                 ((retry_counter++))
                 echo "Failed to archive outlink: $outlink. Retrying..."
+                sleep 8
               fi
             done || true
           done
