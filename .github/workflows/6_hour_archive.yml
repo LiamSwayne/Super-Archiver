@@ -15,6 +15,7 @@ jobs:
         archival_urls=(
           "https://www.mecabricks.com/en/library/renderings"
           "https://www.mecabricks.com"
+          "https://en.uncyclopedia.co/wiki/Main_Page"
         )
 
         for url in "${archival_urls[@]}"; do
