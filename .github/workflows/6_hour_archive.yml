@@ -17,6 +17,9 @@ jobs:
           "https://en.uncyclopedia.co/wiki/Main_Page"
           "https://en.uncyclopedia.co/wiki/Special:Statistics"
           "https://arc.net/"
+          "https://www.atlasobscura.com/"
+          "https://www.openculture.com/"
+          "https://longreads.com/"
         )
 
         for url in "${archival_urls[@]}"; do
